@@ -67,17 +67,17 @@ var exports, required, state;
       /*
         this function inits npm start
       */
-      var consumer;
+      var consumer, host, port;
       if (process.argv.indexOf('--mode-start') < 0) {
         return;
       }
-      consumer = new required.fivebeans.client(
-        process.env.npm_config_host,
-        process.env.npm_config_port
-      );
+      host = process.env.npm_config_host || 'localhost';
+      port = process.env.npm_config_port || 11300;
+      consumer = new required.fivebeans.client(host, port);
       consumer
         .on('connect', function () {
           /* consumer can now be used */
+          console.log('connected to beanstalk server ' + host + ':' + port);
           return;
         })
         .on('error', function (error) {
@@ -396,6 +396,9 @@ var exports, required, state;
     },
 
     beanstalkConsumerHandler: function (error, jobId, payload, consumer) {
+      /*
+        this function handles beanstalk consumption of the magento endpoint url
+      */
       var mode, options, onEventError2;
       mode = 0;
       onEventError2 = function (error, data) {
@@ -418,7 +421,7 @@ var exports, required, state;
           break;
         case 2:
           /* print data to stdout */
-          console.log(options.url, data);
+          console.log(options.url + '\n' + JSON.stringify(data, null, 2));
           onEventError2();
           break;
         default:
@@ -433,6 +436,7 @@ var exports, required, state;
             if (options &&
                 options.salesOrderShippingList &&
                 options.salesOrderShippingList.length > 0) {
+              /* reset options but preserve salesOrderShippingList */
               options = {
                 domain: options.domain,
                 key: options.key,
@@ -545,8 +549,8 @@ var exports, required, state;
         case 5:
           /* multiCall the first 100 or less orders from options.salesOrderShippingList */
           tmp = options.salesOrderShippingList.splice(0, 100);
-          console.log('fetching first 100 or less shipments ' + JSON.stringify(tmp) +
-            ' from ' + options.url);
+          console.log('fetching first 100 or less shipment items from ' + options.url + ' - ' +
+            JSON.stringify(tmp));
           options.data = '<?xml version="1.0"?>' +
             '<methodCall><methodName>multiCall</methodName><params>' +
             '<param><value><string>' + options.sessionToken + '</string></value></param>' +
@@ -573,9 +577,7 @@ var exports, required, state;
               dict = {
                 magentoApiKey: options.key,
                 magentoApiUrl: options.url,
-                magentoApiUser: options.username,
-                salesOrderShipmentItemEntity_track_increment_id:
-                  (/<member><name>increment_id<\/name><value><string>([^<]+)<\/string><\/value><\/member>/).exec(data)[1]
+                magentoApiUser: options.username
               };
               trackInfo
                 .split('</struct></value></data></array></value></member>')[0]

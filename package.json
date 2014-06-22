@@ -1,9 +1,11 @@
 {
+  "bin": { "aftership-beanstalk-client.sh": "./aftership-beanstalk-client.sh" },
   "contributors": [{ "name": "kai zhu", "email": "kaizhu256@gmail.com" }],
   "dependencies": {
     "fivebeans": "1.1.x",
     "jshint": "2.5.x",
-    "jslint": "0.5.x"
+    "jslint": "0.5.x",
+    "xml2js": "0.4.x"
   },
   "description": "afteship beanstalk client",
   "main": "aftership-beanstalk-client.js",
