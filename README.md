@@ -59,6 +59,10 @@ npm start --host=localhost --port=11300
 - add retries to timeout handling
 
 ## changelog
+#### 2014.6.23
+- add npm start
+- add example.js and library usage example
+
 #### 2014.6.22
 - integrate consumer into beanstalkd
 - implement pagination in consumer for shipping list
