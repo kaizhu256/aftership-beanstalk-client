@@ -3,8 +3,8 @@
   "contributors": [{ "name": "kai zhu", "email": "kaizhu256@gmail.com" }],
   "dependencies": {
     "fivebeans": "1.1.x",
-    "jshint": "2.5.x",
-    "jslint": "0.5.x",
+    "jshint": "2.9.3",
+    "jslint": "0.10.0",
     "xml2js": "0.4.x"
   },
   "description": "afteship beanstalk client",
